@@ -1,0 +1,52 @@
+{% extends 'cafe/base.html' %}
+
+{% block content %}
+<h1>Menu</h1>
+
+<div class="menu-section">
+    <h2>Main Dishes</h2>
+    <div class="menu-grid">
+        {% for item in menu_items %}
+            {% if item.category == 'main' %}
+                <div class="menu-card">
+                    <h3>{{ item.name }}</h3>
+                    <div class="price">£{{ item.price }}</div>
+                    <a href="{% url 'edit_item' item.pk %}" class="edit-link">Edit</a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="menu-section">
+    <h2>Snacks</h2>
+    <div class="menu-grid">
+        {% for item in menu_items %}
+            {% if item.category == 'snack' %}
+                <div class="menu-card">
+                    <h3>{{ item.name }}</h3>
+                    <div class="price">£{{ item.price }}</div>
+                    <a href="{% url 'edit_item' item.pk %}" class="edit-link">Edit</a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="menu-section">
+    <h2>Drinks</h2>
+    <div class="menu-grid">
+        {% for item in menu_items %}
+            {% if item.category == 'drink' %}
+                <div class="menu-card">
+                    <h3>{{ item.name }}</h3>
+                    <div class="price">£{{ item.price }}</div>
+                    <a href="{% url 'edit_item' item.pk %}" class="edit-link">Edit</a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<p><a href="{% url 'add_item' %}" class="edit-link">Add New Item</a></p>
+{% endblock %}

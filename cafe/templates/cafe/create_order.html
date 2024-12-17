@@ -1,0 +1,117 @@
+{% extends 'cafe/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Create New Order</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" class="order-form">
+        {% csrf_token %}
+        
+        <div class="form-group customer-selection">
+            <h3>Customer Information</h3>
+            {{ order_form.customer_type }}
+            
+            <div id="existing-customer-section">
+                <label for="{{ order_form.existing_customer.id_for_label }}">Select Customer:</label>
+                {{ order_form.existing_customer }}
+            </div>
+            
+            <div id="new-customer-section" style="display: none;">
+                <h4>New Customer Details</h4>
+                {% for field in customer_form %}
+                <div class="form-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="error-message">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group menu-items">
+            <h3>Select Menu Items:</h3>
+            <div class="menu-categories">
+                <div class="category">
+                    <h4>Main Dishes</h4>
+                    {% for item in order_form.items.field.queryset %}
+                        {% if item.category == 'main' %}
+                            <div class="menu-item-checkbox">
+                                <input type="checkbox" name="items" value="{{ item.id }}" id="item_{{ item.id }}">
+                                <label for="item_{{ item.id }}">{{ item.name }} - £{{ item.price }}</label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="category">
+                    <h4>Snacks</h4>
+                    {% for item in order_form.items.field.queryset %}
+                        {% if item.category == 'snack' %}
+                            <div class="menu-item-checkbox">
+                                <input type="checkbox" name="items" value="{{ item.id }}" id="item_{{ item.id }}">
+                                <label for="item_{{ item.id }}">{{ item.name }} - £{{ item.price }}</label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="category">
+                    <h4>Drinks</h4>
+                    {% for item in order_form.items.field.queryset %}
+                        {% if item.category == 'drink' %}
+                            <div class="menu-item-checkbox">
+                                <input type="checkbox" name="items" value="{{ item.id }}" id="item_{{ item.id }}">
+                                <label for="item_{{ item.id }}">{{ item.name }} - £{{ item.price }}</label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Order</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const customerTypeInputs = document.querySelectorAll('input[name="customer_type"]');
+    const existingCustomerSection = document.getElementById('existing-customer-section');
+    const newCustomerSection = document.getElementById('new-customer-section');
+
+    function toggleCustomerSections(customerType) {
+        if (customerType === 'existing') {
+            existingCustomerSection.style.display = 'block';
+            newCustomerSection.style.display = 'none';
+        } else {
+            existingCustomerSection.style.display = 'none';
+            newCustomerSection.style.display = 'block';
+        }
+    }
+
+    customerTypeInputs.forEach(input => {
+        input.addEventListener('change', (e) => {
+            toggleCustomerSections(e.target.value);
+        });
+    });
+
+    // Initialize with the default selection
+    const selectedCustomerType = document.querySelector('input[name="customer_type"]:checked').value;
+    toggleCustomerSections(selectedCustomerType);
+});
+</script>
+{% endblock %}

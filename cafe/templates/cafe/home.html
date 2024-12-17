@@ -1,0 +1,40 @@
+{% extends 'cafe/base.html' %}
+
+{% block content %}
+<div class="orders-container">
+    <h1>Current Orders</h1>
+    
+    {% if orders %}
+        <div class="orders-grid">
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <h3>Order #{{ order.id }}</h3>
+                        <span class="order-date">{{ order.order_date|date:"M d, Y H:i" }}</span>
+                    </div>
+                    <div class="customer-info">
+                        <i class="customer-name">{{ order.customer }}</i>
+                    </div>
+                    <div class="order-items">
+                        <h4>Items:</h4>
+                        <ul>
+                            {% for item in order.items.all %}
+                                <li>
+                                    <span class="item-name">{{ item.name }}</span>
+                                    <span class="item-price">£{{ item.price }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="order-total">
+                        <strong>Total:</strong>
+                        <span class="total-price">£{{ order.total }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-orders">No orders found.</p>
+    {% endif %}
+</div>
+{% endblock %}
